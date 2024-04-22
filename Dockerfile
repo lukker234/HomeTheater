@@ -8,6 +8,14 @@ RUN apt update && apt install -y \
     libonig-dev \
     libxml2-dev
 
+COPY --from=node:20-alpine /usr/local/bin/node /usr/local/bin/
+COPY --from=node:20-alpine /usr/local/lib/node_modules/ /usr/local/lib/node_modules/
+# Add Node.js binary path to PATH
+ENV PATH="/usr/local/bin:${PATH}"
+
+# Install npm
+RUN ln -s /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm
+
 # Clean up
 RUN apt clean && rm -rf /var/lib/apt/lists/*
 
